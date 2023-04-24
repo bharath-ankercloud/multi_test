@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'slave'}
+    agent {label 'masternode || slave'}
     stages {
     stage('branch name'){
             steps{
@@ -30,7 +30,7 @@ pipeline {
         }
     }
     stage('prod') {
-    agent{label 'slave'}
+    agent{label 'masternode || slave'}
     when{
                allOf{
                 branch "prod"
