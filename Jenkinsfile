@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'slave'}
+    agent {label 'masternode || slave'}
     stages {
     stage('branch name'){
             steps{
@@ -30,7 +30,7 @@ pipeline {
         }
     }
     stage('prod') {
-    agent{label 'slave'}
+    agent{label 'masternode || slave'}
     when{
                allOf{
                 branch "prod"
@@ -38,13 +38,36 @@ pipeline {
                 }
             }
         stages{
-            stage('get top of slave in dev build') {
+            stage('get top of slave in prod build') {
                 steps{
                     echo "prod top"
                     sh 'top -b -n 1'
                 }
             }
-            stage('get hostname of slave in dev build') {
+            stage('get hostname of slave in prod build') {
+                steps{
+                    echo "prod host"
+                    sh 'head -n 10 && hostname'
+                }
+            }
+        }
+    }
+        stage('qa') {
+    agent{label 'slave'}
+    when{
+               allOf{
+                branch "qa"
+                triggeredBy cause: 'UserIdCause'
+                }
+            }
+        stages{
+            stage('get top of slave in qa build') {
+                steps{
+                    echo "qa top"
+                    sh 'top -b -n 1'
+                }
+            }
+            stage('get hostname of slave in qa build') {
                 steps{
                     echo "prod host"
                     sh 'head -n 10 && hostname'
