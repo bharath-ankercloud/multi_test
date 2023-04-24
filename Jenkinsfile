@@ -17,15 +17,40 @@ pipeline {
         stages{
             stage('get top of slave in dev build') {
                 steps{
+                    echo "dev top"
                     sh 'top -b -n 1'
                 }
             }
             stage('get hostname of slave in dev build') {
                 steps{
+                    echo "dev host"
                     sh 'head -n 10 && hostname'
                 }
             }
         }
+    }
+    stage('prod') {
+    agent{label 'slave'}
+    when{
+               allOf{
+                branch "prod"
+                triggeredBy cause: 'UserIdCause'
+                }
+            }
+        stages{
+            stage('get top of slave in dev build') {
+                steps{
+                    echo "prod top"
+                    sh 'top -b -n 1'
+                }
+            }
+            stage('get hostname of slave in dev build') {
+                steps{
+                    echo "prod host"
+                    sh 'head -n 10 && hostname'
+                }
+            }
         }
+    }
     }
 }
