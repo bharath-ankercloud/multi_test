@@ -8,7 +8,12 @@ pipeline {
         }
     stage('dev') {
     agent{label 'slave'}
-
+    when{
+               allOf{
+                branch "dev"
+                triggeredBy cause: 'UserIdCause'
+                }
+            }
         stages{
             stage('get top of slave in dev build') {
                 steps{
